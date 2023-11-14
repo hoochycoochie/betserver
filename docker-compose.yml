@@ -1,0 +1,34 @@
+services:
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      # Only will build development stage from our dockerfile
+      #target: development
+    networks:
+      - backend
+    volumes:
+      - .:/usr/src/app
+    #env_file:
+    #- .env
+    # Run a command against the development stage of the image
+    command: npm run start:dev
+    ports:
+      - 3001:3001
+    depends_on:
+      - redis
+
+  redis: # Name of container
+    image: redis:4
+    ports:
+      - 6379:6379
+    networks:
+      - backend
+    volumes:
+      - redis:/data
+networks:
+  backend:
+  
+volumes:
+  redis:
+    driver: local
